@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { onAuthStateChanged } from "firebase/auth";
 
 const bannerContainer = {
@@ -49,6 +49,183 @@ function useToast() {
   return { msg, visible, show };
 }
 
+// ─── Legal Modal ──────────────────────────────────────────────────────────────
+
+const LEGAL_CONTENT = {
+  terms: {
+    title: "Terms of Use",
+    badge: "📋",
+    sections: [
+      {
+        heading: "1. Nature of This Application",
+        body: "Love Island Fan Hub is a 100% non-commercial, fan-made companion app built for entertainment and educational portfolio purposes only. No paid subscription, in-app purchase, or revenue of any kind is generated from this application.",
+      },
+      {
+        heading: "2. Acceptable Use",
+        body: "By accessing this app you agree to use it solely for personal, non-commercial entertainment. You must not use this app to harass, impersonate, or harm other users. Watch party chat messages must be respectful and free of hate speech, explicit content, or personal attacks.",
+      },
+      {
+        heading: "3. User-Generated Content",
+        body: "Any predictions, display names, or chat messages you submit remain your own. By submitting content you grant this app a non-exclusive licence to display it to other users within your party session. You are solely responsible for the content you post.",
+      },
+      {
+        heading: "4. Data & Authentication",
+        body: "Sign-in is handled securely via Google OAuth. We store only the data necessary to run your session: your display name, profile photo URL, party picks, and chat messages. No payment or sensitive personal data is collected. See our Privacy Policy for full details.",
+      },
+      {
+        heading: "5. No Warranty",
+        body: "This app is provided \"as is\" without any warranty of any kind. The developer makes no guarantee of uptime, accuracy, or fitness for any particular purpose. The app may be modified, suspended, or discontinued at any time without notice.",
+      },
+      {
+        heading: "6. Limitation of Liability",
+        body: "To the fullest extent permitted by law, the developer shall not be liable for any indirect, incidental, or consequential damages arising from your use of this application.",
+      },
+      {
+        heading: "7. Changes to These Terms",
+        body: "These terms may be updated at any time. Continued use of the app after changes are posted constitutes acceptance of the revised terms.",
+      },
+    ],
+  },
+  privacy: {
+    title: "Privacy Policy",
+    badge: "🔒",
+    sections: [
+      {
+        heading: "What We Collect",
+        body: "When you sign in with Google we receive your public profile information: your display name and profile photo URL. You also provide a display name of your choosing. We store your watch party picks (Favourite Islander, First Dumped prediction, couplings) and any chat messages you send within your party.",
+      },
+      {
+        heading: "How We Use Your Data",
+        body: "Your data is used exclusively to power the app experience: identifying you within your party, displaying your avatar to other party members, showing community rankings, and enabling real-time chat. We do not use your data for advertising, profiling, or any commercial purpose.",
+      },
+      {
+        heading: "Data Storage",
+        body: "All data is stored in Google Firebase (Firestore) and is subject to Google's privacy and security standards. Your display name and picks are also cached in your browser's localStorage to improve load speed and offline resilience.",
+      },
+      {
+        heading: "Third-Party Services",
+        body: "This app uses Google Firebase for authentication and database services, and Google OAuth for sign-in. These services are governed by Google's own Privacy Policy and Terms of Service. We do not integrate any advertising networks, analytics trackers, or data brokers.",
+      },
+      {
+        heading: "Data Retention & Deletion",
+        body: "Your data remains stored until you request deletion. To request deletion of your account data, contact the developer at jaeleen.pg@gmail.com. We will remove your records from Firestore within 30 days of a verified request.",
+      },
+      {
+        heading: "Children's Privacy",
+        body: "This app is intended for users aged 13 and over. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal data, please contact us immediately.",
+      },
+      {
+        heading: "Contact",
+        body: "For any privacy-related questions or data deletion requests, contact: jaeleen.pg@gmail.com.",
+      },
+    ],
+  },
+  fairuse: {
+    title: "Fair Use & Copyright Disclaimer",
+    badge: "🛡️",
+    sections: [
+      {
+        heading: "Non-Affiliation Statement",
+        body: "This application is not affiliated with, endorsed by, sponsored by, or in any way officially connected with ITV Studios, Peacock, Universal Television, or the Love Island franchise. The official Love Island website and all related properties are the exclusive property of their respective owners.",
+      },
+      {
+        heading: "Fan-Made Parody & Fair Use",
+        body: "This app is a fan-made parody concept created strictly for non-commercial, educational, and entertainment portfolio purposes. Under Section 107 of the U.S. Copyright Act and equivalent provisions in other jurisdictions, commentary, criticism, parody, and educational uses may qualify as fair use. This application does not reproduce, distribute, or monetise any original copyrighted content from the Love Island franchise.",
+      },
+      {
+        heading: "Trademark Acknowledgement",
+        body: "\"Love Island\" is a registered trademark of ITV Studios. Use of the name within this fan app is purely descriptive and referential — it is intended to identify the subject of the fan commentary, not to suggest any affiliation with or endorsement by the trademark owner.",
+      },
+      {
+        heading: "No Commercial Benefit",
+        body: "No revenue, subscription fees, donations, or any form of commercial benefit is derived from this application. It exists solely as a personal portfolio project to demonstrate frontend development and UX design skills.",
+      },
+      {
+        heading: "Original Assets",
+        body: "All UI design, component architecture, code, and original written content within this app was created independently by the developer. Islander profile images used for demonstration are sourced from publicly available promotional materials. No claim of ownership is made over any third-party intellectual property.",
+      },
+      {
+        heading: "Takedown Policy",
+        body: "If you are a rights holder and believe any content in this application infringes your intellectual property, please contact jaeleen.pg@gmail.com with details of your claim. We will respond promptly and remove any infringing material upon verification.",
+      },
+    ],
+  },
+};
+
+function LegalModal({ type, onClose }) {
+  const content = LEGAL_CONTENT[type];
+  if (!content) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(6px)" }}
+      onClick={e => e.target === e.currentTarget && onClose()}
+    >
+      <motion.div
+        initial={{ y: "100%", opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: "100%", opacity: 0 }}
+        transition={{ type: "spring", damping: 30, stiffness: 320 }}
+        className="w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl flex flex-col"
+        style={{ background: "white", maxHeight: "88vh" }}
+      >
+        {/* Header */}
+        <div className="flex-shrink-0 px-5 pt-5 pb-4 border-b" style={{ borderColor: "rgba(0,0,0,0.07)" }}>
+          <div className="w-10 h-1 rounded-full mx-auto mb-4 sm:hidden" style={{ background: "#E2E8F0" }} />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">{content.badge}</span>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 600, fontSize: 17, color: "#0F172A" }}>
+                {content.title}
+              </h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M1 1l12 12M13 1L1 13" stroke="#94A3B8" strokeWidth="1.8" strokeLinecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <p style={{ fontSize: 10.5, color: "#94A3B8", marginTop: 4 }}>
+            Last updated: May 2026 · Love Island Fan Hub
+          </p>
+        </div>
+
+        {/* Scrollable body */}
+        <div className="flex-1 overflow-y-auto px-5 py-5 space-y-5">
+          {content.sections.map(({ heading, body }) => (
+            <div key={heading}>
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#0891B2", marginBottom: 6 }}>
+                {heading}
+              </p>
+              <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.7 }}>
+                {body}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer CTA */}
+        <div className="flex-shrink-0 px-5 py-4 border-t" style={{ borderColor: "rgba(0,0,0,0.07)" }}>
+          <button
+            onClick={onClose}
+            className="w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-[0.98]"
+            style={{ background: "linear-gradient(135deg,#0891B2,#22D3EE)", color: "white", border: "none", fontFamily: "'Josefin Sans',sans-serif", letterSpacing: "0.06em" }}
+          >
+            Got it — Close
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function Lobby({ onComplete }) {
@@ -57,6 +234,12 @@ export default function Lobby({ onComplete }) {
   const [authReady, setAuthReady] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
   const [authError, setAuthError] = useState(null);
+
+  // Legal compliance gate
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [termsShakeKey, setTermsShakeKey] = useState(0);
+  const [termsError,    setTermsError]    = useState(false);
+  const [legalModal,    setLegalModal]    = useState(null); // "terms" | "privacy" | "fairuse" | null
 
   // Multi-step flow
   // step 1 = sign in  |  step 2 = display name + party code  |  step 3 = success
@@ -112,6 +295,12 @@ export default function Lobby({ onComplete }) {
 
   // ── Google sign-in ─────────────────────────────────────────────────────────
   async function handleSignIn() {
+    if (!agreedToTerms) {
+      setTermsShakeKey(k => k + 1);
+      setTermsError(true);
+      return;
+    }
+    setTermsError(false);
     setSigningIn(true);
     setAuthError(null);
     try {
@@ -450,6 +639,98 @@ export default function Lobby({ onComplete }) {
                   Continue with Apple
                 </button>
 
+                {/* ── Legal compliance gate ── */}
+                <div style={{ marginTop:18 }}>
+
+                  {/* Warning notification */}
+                  <AnimatePresence>
+                    {termsError && !agreedToTerms && (
+                      <motion.div
+                        key="terms-warning"
+                        initial={{ opacity:0, y:-6, scale:0.97 }}
+                        animate={{ opacity:1, y:0,  scale:1   }}
+                        exit={{    opacity:0, y:-4, scale:0.97 }}
+                        transition={{ duration:0.2 }}
+                        role="alert"
+                        style={{
+                          display:"flex", alignItems:"flex-start", gap:8,
+                          padding:"10px 12px", borderRadius:10, marginBottom:10,
+                          background:"#FFF1F2", border:"1px solid #FDA4AF",
+                        }}
+                      >
+                        <span style={{ fontSize:14, flexShrink:0, marginTop:1 }}>⚠️</span>
+                        <p style={{ fontSize:11.5, fontWeight:600, color:"#BE123C", lineHeight:1.45, margin:0 }}>
+                          Please accept the Terms, Privacy Policy, and Fair Use Disclaimer before signing in.
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Shake + border wrapper */}
+                  <motion.div
+                    key={termsShakeKey}
+                    animate={termsShakeKey > 0 ? { x:[0,-9,9,-7,7,-4,4,0] } : {}}
+                    transition={{ duration:0.45, ease:"easeInOut" }}
+                    style={{
+                      padding:"12px 14px", borderRadius:12,
+                      background: agreedToTerms ? "#F0FDF4" : "#F8FAFC",
+                      border: `1.5px solid ${agreedToTerms ? "#86EFAC" : termsError ? "#FDA4AF" : "#E2E8F0"}`,
+                      transition:"background 0.2s, border-color 0.2s",
+                    }}
+                  >
+                    <div style={{ display:"flex", alignItems:"flex-start", gap:10 }}>
+                      {/* Custom checkbox */}
+                      <div
+                        role="checkbox"
+                        aria-checked={agreedToTerms}
+                        onClick={() => { setAgreedToTerms(v => !v); setTermsError(false); }}
+                        style={{
+                          width:18, height:18, borderRadius:5, flexShrink:0, marginTop:1,
+                          border:`2px solid ${agreedToTerms ? "#0891B2" : termsError ? "#FDA4AF" : "#CBD5E1"}`,
+                          background: agreedToTerms ? "#0891B2" : "white",
+                          display:"flex", alignItems:"center", justifyContent:"center",
+                          cursor:"pointer", transition:"all 0.15s",
+                        }}
+                      >
+                        {agreedToTerms && (
+                          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                            <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </div>
+                      <p
+                        style={{ fontSize:11.5, color:"#475569", lineHeight:1.55, margin:0, cursor:"pointer" }}
+                        onClick={() => { setAgreedToTerms(v => !v); setTermsError(false); }}
+                      >
+                        I agree to the{" "}
+                        <a href="#" onClick={e => { e.preventDefault(); e.stopPropagation(); setLegalModal("terms"); }} style={{ color:"#0891B2", fontWeight:600, textDecoration:"underline", textUnderlineOffset:2 }}>Terms</a>,{" "}
+                        <a href="#" onClick={e => { e.preventDefault(); e.stopPropagation(); setLegalModal("privacy"); }} style={{ color:"#0891B2", fontWeight:600, textDecoration:"underline", textUnderlineOffset:2 }}>Privacy Policy</a>, and{" "}
+                        <a href="#" onClick={e => { e.preventDefault(); e.stopPropagation(); setLegalModal("fairuse"); }} style={{ color:"#0891B2", fontWeight:600, textDecoration:"underline", textUnderlineOffset:2 }}>Fair Use Disclaimers</a>.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Copyright Shield Disclaimer */}
+                  <div style={{
+                    marginTop:10, padding:"11px 13px", borderRadius:10,
+                    background:"linear-gradient(135deg,#F0F9FF,#F5F3FF)",
+                    border:"1px solid #BAE6FD",
+                  }}>
+                    <p style={{ fontSize:10, color:"#475569", lineHeight:1.65, margin:0 }}>
+                      <span style={{
+                        display:"block", marginBottom:4,
+                        fontSize:9, fontWeight:700, fontStyle:"normal",
+                        letterSpacing:"0.1em", textTransform:"uppercase", color:"#0891B2",
+                      }}>
+                        🛡️ Fair Use Disclaimer
+                      </span>
+                      <span style={{ fontStyle:"italic" }}>
+                        This application is a 100% non-commercial, fan-made parody concept created strictly for educational and entertainment portfolio purposes. It is not affiliated with, endorsed by, or associated with ITV Studios, Peacock, or the official Love Island franchise. All trademarks, show titles, and assets belong to their respective copyright owners.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
                 {authError && (
                   <p role="alert" style={{ fontSize:11.5, color:"#F43F5E", textAlign:"center", marginTop:14 }}>
                     {authError}
@@ -639,15 +920,15 @@ export default function Lobby({ onComplete }) {
               className="text-slate-400 md:text-slate-400" >
               <span className="md:hidden" style={{ color:"rgba(255,255,255,0.55)" }}>
                 By continuing you agree to our{" "}
-                <a href="#" style={{ color:"rgba(255,255,255,0.8)", textDecoration:"none" }}>Terms</a>
+                <a href="#" onClick={e => { e.preventDefault(); setLegalModal("terms"); }} style={{ color:"rgba(255,255,255,0.8)", textDecoration:"underline", textUnderlineOffset:2 }}>Terms</a>
                 {" "}and{" "}
-                <a href="#" style={{ color:"rgba(255,255,255,0.8)", textDecoration:"none" }}>Privacy Policy</a>
+                <a href="#" onClick={e => { e.preventDefault(); setLegalModal("privacy"); }} style={{ color:"rgba(255,255,255,0.8)", textDecoration:"underline", textUnderlineOffset:2 }}>Privacy Policy</a>
               </span>
               <span className="hidden md:inline" style={{ color:"#94A3B8" }}>
                 By continuing you agree to our{" "}
-                <a href="#" style={{ color:"#0891B2", textDecoration:"none" }}>Terms of Service</a>
+                <a href="#" onClick={e => { e.preventDefault(); setLegalModal("terms"); }} style={{ color:"#0891B2", textDecoration:"underline", textUnderlineOffset:2 }}>Terms of Service</a>
                 {" "}and{" "}
-                <a href="#" style={{ color:"#0891B2", textDecoration:"none" }}>Privacy Policy</a>
+                <a href="#" onClick={e => { e.preventDefault(); setLegalModal("privacy"); }} style={{ color:"#0891B2", textDecoration:"underline", textUnderlineOffset:2 }}>Privacy Policy</a>
               </span>
             </p>
           )}
@@ -663,6 +944,13 @@ export default function Lobby({ onComplete }) {
         </div>
         <span>{toast.msg}</span>
       </div>
+
+      {/* ── Legal modals ── */}
+      <AnimatePresence>
+        {legalModal && (
+          <LegalModal key={legalModal} type={legalModal} onClose={() => setLegalModal(null)} />
+        )}
+      </AnimatePresence>
     </>
   );
 }

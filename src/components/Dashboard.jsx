@@ -7,9 +7,9 @@ import { db } from "../firebaseConfig";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import {
-  Home, Users, Heart, MessageCircle, Trophy, Star,
-  Search, Send, X, Crown, Zap, Check, Clock,
-  Sparkles, RotateCcw, ChevronRight, ChevronUp, ChevronDown,
+  Home, Users, Heart, MessageCircle,
+  Send, X, Zap, Check, Clock,
+  Sparkles, RotateCcw, ChevronRight,
   Radio, LogOut, Edit2,
 } from "lucide-react";
 
@@ -38,18 +38,18 @@ function uidColor(uid = "") {
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 const ISLANDERS_INIT = [
-  { id:"1",  name:"Aniya",   age:23, job:"Content Creator",        image:"/aniya.jpeg",   status:"coupled", partnerId:"8",  compat:91, traits:["Magnetic","Ambitious","Charismatic"], bio:"The villa's energy. Aniya came to have fun — and somehow also dominated the game." },
-  { id:"2",  name:"Beatriz", age:25, job:"Model",                  image:"/beatriz.jpeg", status:"coupled", partnerId:"12", compat:75, traits:["Confident","Fiery","Stylish"],        bio:"Turned heads from the moment she walked in. Zero apologies, maximum presence." },
-  { id:"3",  name:"Bryce",   age:27, job:"Real Estate Agent",      image:"/bryce.jpeg",   status:"coupled", partnerId:"6",  compat:80, traits:["Smooth","Strategic","Charming"],      bio:"Says the right thing every single time. The villa's most calculated player." },
-  { id:"4",  name:"Gabriel", age:26, job:"Personal Trainer",       image:"/gabriel.jpeg", status:"coupled", partnerId:"10", compat:67, traits:["Intense","Loyal","Athletic"],          bio:"All heart, all the time. Gets too deep too fast — and everyone loves him for it." },
-  { id:"5",  name:"KC",      age:24, job:"Bartender",              image:"/kc.jpeg",      status:"coupled", partnerId:"9",  compat:84, traits:["Outspoken","Bold","Funny"],            bio:"Will say exactly what everyone else is thinking. The villa's most honest voice." },
-  { id:"6",  name:"Kenzie",  age:22, job:"Dance Instructor",       image:"/kenzie.jpeg",  status:"coupled", partnerId:"3",  compat:80, traits:["Free-spirited","Energetic","Playful"], bio:"Could be having the worst day and you'd never know. Pure sunshine energy." },
-  { id:"7",  name:"Melanie", age:28, job:"Nurse",                  image:"/melanie.jpeg", status:"single",  partnerId:null, compat:0,  traits:["Caring","Real","Patient"],             bio:"The villa's quiet powerhouse. Underestimated every day, winning every week." },
-  { id:"8",  name:"Sean",    age:26, job:"Entrepreneur",           image:"/sean.jpeg",    status:"coupled", partnerId:"1",  compat:91, traits:["Driven","Romantic","Steady"],          bio:"Came in knowing exactly what he wanted. Locked in early and never looked back." },
-  { id:"9",  name:"Sincere", age:25, job:"Musician",               image:"/sincere.jpeg", status:"coupled", partnerId:"5",  compat:84, traits:["Creative","Deep","Loyal"],             bio:"Writes songs about the villa in his head. The most emotionally intelligent man here." },
-  { id:"10", name:"Trinity", age:23, job:"Marketing Coordinator",  image:"/trinity.jpeg", status:"coupled", partnerId:"4",  compat:67, traits:["Strategic","Sharp","Private"],         bio:"Playing a quiet game with loud consequences. Nobody sees her moves coming." },
-  { id:"11", name:"Vasana",  age:24, job:"Graphic Designer",       image:"/vasana.jpeg",  status:"single",  partnerId:null, compat:0,  traits:["Creative","Kind","Observant"],          bio:"Has been watching everyone from Day 1. The villa's most dangerous dark horse." },
-  { id:"12", name:"Zach",    age:29, job:"Sports Coach",           image:"/zach.jpeg",    status:"coupled", partnerId:"2",  compat:75, traits:["Confident","Direct","Fun"],            bio:"Took his shot on Day 1 and somehow it worked. Full send, every time." },
+  { id:"1",  name:"Aniya",   image:"/aniya.jpeg",   status:"single", partnerId:null, compat:0 },
+  { id:"2",  name:"Beatriz", image:"/beatriz.jpeg", status:"single", partnerId:null, compat:0 },
+  { id:"3",  name:"Bryce",   image:"/bryce.jpeg",   status:"single", partnerId:null, compat:0 },
+  { id:"4",  name:"Gabriel", image:"/gabriel.jpeg", status:"single", partnerId:null, compat:0 },
+  { id:"5",  name:"KC",      image:"/kc.jpeg",      status:"single", partnerId:null, compat:0 },
+  { id:"6",  name:"Kenzie",  image:"/kenzie.jpeg",  status:"single", partnerId:null, compat:0 },
+  { id:"7",  name:"Melanie", image:"/melanie.jpeg", status:"single", partnerId:null, compat:0 },
+  { id:"8",  name:"Sean",    image:"/sean.jpeg",    status:"single", partnerId:null, compat:0 },
+  { id:"9",  name:"Sincere", image:"/sincere.jpeg", status:"single", partnerId:null, compat:0 },
+  { id:"10", name:"Trinity", image:"/trinity.jpeg", status:"single", partnerId:null, compat:0 },
+  { id:"11", name:"Vasana",  image:"/vasana.jpeg",  status:"single", partnerId:null, compat:0 },
+  { id:"12", name:"Zach",    image:"/zach.jpeg",    status:"single", partnerId:null, compat:0 },
 ];
 
 const CHALLENGES_INIT = [
@@ -62,48 +62,9 @@ const CHALLENGES_INIT = [
 ];
 
 const THREADS = [
-  { id:"canada", name:"🍁 Canada Lounge",  online:142 },
-  { id:"aria",   name:"Team Aria 💕",       online:38  },
-  { id:"sarah",  name:"Sarah 🟢",           online:1, dm:true },
-];
-
-const INIT_MESSAGES = {
-  canada: [
-    { id:1, user:"Sarah",  color:"#de69c0", text:"OMG did you see Marco's face when Chloe walked in?!", time:"8:42 PM" },
-    { id:2, user:"Marcus", color:"#0A84FF", text:"Aria is literally playing the most calculated game right now 👀", time:"8:43 PM" },
-    { id:3, user:"Jordan", color:"#F59E0B", text:"I literally screamed at that text alert 😭😭😭", time:"8:44 PM" },
-    { id:4, user:"Sam",    color:"#22C55E", text:"Theo crying was so unexpectedly adorable I cannot 😭", time:"8:45 PM" },
-    { id:5, user:"Marcus", color:"#0A84FF", text:"Team Aria to win it all 🏆🏆🏆", time:"8:46 PM" },
-    { id:6, user:"Jordan", color:"#F59E0B", text:"Did anyone else clock Kai's reaction though?? HIM 👀", time:"8:47 PM" },
-    { id:7, user:"Sarah",  color:"#de69c0", text:"RECOUPLING TONIGHT I LITERALLY CANNOT BREATHE RIGHT NOW 💀", time:"8:48 PM" },
-  ],
-  aria: [
-    { id:1, user:"Priya",  color:"#8B5CF6", text:"She is literally running the entire villa at this point", time:"8:40 PM" },
-    { id:2, user:"Taylor", color:"#de69c0", text:"Aria + Kai is the most genuine couple in there 💯", time:"8:41 PM" },
-    { id:3, user:"Priya",  color:"#8B5CF6", text:"Nobody is touching them in the final. Calling it now.", time:"8:45 PM" },
-    { id:4, user:"Taylor", color:"#de69c0", text:"I already started my Aria & Kai fan art honestly 🎨", time:"8:47 PM" },
-  ],
-  sarah: [
-    { id:1, user:"Sarah", color:"#de69c0", text:"Hey! What did you think of tonight's episode??", time:"8:30 PM" },
-    { id:2, user:"Sarah", color:"#de69c0", text:"I'm literally SHOOK about the Marco situation 😳", time:"8:31 PM" },
-    { id:3, user:"Sarah", color:"#de69c0", text:"Also… did you see who just walked in at the end? 😳", time:"8:32 PM" },
-  ],
-};
-
-const BOT_REPLIES = [
-  "Right?? I was thinking the exact same thing 😂",
-  "No way, did you really just say that?? 💀",
-  "Honestly yeah, I'm completely here for it",
-  "Okay but can we talk about the editing in that scene?",
-  "I screamed when I saw that happen, honestly iconic",
-  "The producers are absolutely wild for that one tbh",
-  "Aria's face in that moment was genuinely priceless",
-  "This season has been SO good compared to last year",
-];
-const BOTS = [
-  { name:"Sarah",  color:"#de69c0" },
-  { name:"Marcus", color:"#0A84FF" },
-  { name:"Jordan", color:"#F59E0B" },
+  { id:"canada",   name:"🍁 Canada Lounge" },
+  { id:"islanders", name:"🏝️ The Islanders" },
+  { id:"hottakes",  name:"🔥 Hot Takes"     },
 ];
 
 const TEXT_ALERTS = [
@@ -118,12 +79,9 @@ const TEXT_ALERTS = [
 // ONLINE_SIMS removed — presence is now tracked live via Firestore globalPresence
 
 const TABS = [
-  { key:"villa",      label:"Villa",      Icon: Home          },
-  { key:"islanders",  label:"Islanders",  Icon: Users         },
-  { key:"couples",    label:"Couples",    Icon: Heart         },
-  { key:"chat",       label:"Chat",       Icon: MessageCircle },
-  { key:"challenges", label:"Tasks",      Icon: Trophy        },
-  { key:"vote",       label:"Vote",       Icon: Star          },
+  { key:"villa",     label:"Villa",     Icon: Home          },
+  { key:"islanders", label:"Islanders", Icon: Users         },
+  { key:"chat",      label:"Chat",      Icon: MessageCircle },
 ];
 
 const PAGE = {
@@ -193,7 +151,7 @@ function TopBar({ onSignOut, displayName, photoURL, uid, partyCode, onlineUsers 
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
               style={{ background:"rgba(255,255,255,0.18)", border:"1px solid rgba(255,255,255,0.25)" }}>
-              <span className="text-xs font-semibold" style={{ color:"white" }}>🏝️ DAY 14</span>
+              <span className="text-xs font-semibold" style={{ color:"white" }}>🏝️ DAY 0</span>
             </div>
             <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full"
               style={{ background:"rgba(255,255,255,0.18)", border:"1px solid rgba(255,255,255,0.25)" }}>
@@ -833,9 +791,7 @@ function VillaTab({ islanders, setActiveTab, predictions, onUpdatePredictions, a
         <div className="p-3 grid grid-cols-2 gap-2">
           {[
             { label:"View Islanders", key:"islanders", emoji:"👥", color:C.ocean },
-            { label:"See Couples",    key:"couples",   emoji:"💕", color:C.pink  },
             { label:"Join Chat",      key:"chat",      emoji:"💬", color:C.coral },
-            { label:"Vote Now",       key:"vote",      emoji:"🗳️", color:C.amber },
           ].map(({ label, key, emoji, color }) => (
             <button key={key} onClick={() => setActiveTab(key)}
               className="flex items-center gap-2 p-3 rounded-xl transition-all active:scale-[0.97]"
@@ -852,106 +808,26 @@ function VillaTab({ islanders, setActiveTab, predictions, onUpdatePredictions, a
 }
 
 // ─── IslandersTab ─────────────────────────────────────────────────────────────
-function IslandersTab({ islanders, matchmakerFav }) {
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
-
-  const filtered = islanders.filter(i => {
-    const q = search.toLowerCase();
-    return (
-      (i.name.toLowerCase().includes(q) || i.job.toLowerCase().includes(q)) &&
-      (filter === "all" || i.status === filter)
-    );
-  });
-
+function IslandersTab({ islanders }) {
   return (
-    <motion.div {...PAGE} className="space-y-4">
-      <div className="relative">
-        <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" color={C.muted} />
-        <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-          placeholder="Search islanders or jobs…"
-          className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none"
-          style={{ background:C.card, border:`1px solid ${C.cardBorder}`, color:C.ink }} />
-      </div>
-
-      <div className="flex gap-2">
-        {[
-          { key:"all",     label:"View All"     },
-          { key:"single",  label:"Singles Only" },
-          { key:"coupled", label:"Coupled Only" },
-        ].map(({ key, label }) => (
-          <button key={key} onClick={() => setFilter(key)}
-            className="flex-1 py-2 rounded-xl text-xs font-bold transition-all"
-            style={{
-              background: filter===key ? C.ocean : C.card,
-              color:      filter===key ? "white" : C.slate,
-              border:     `1px solid ${filter===key ? C.ocean : C.cardBorder}`,
-              fontFamily: "'Josefin Sans',sans-serif",
-            }}>
-            {label}
-          </button>
+    <motion.div {...PAGE}>
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+        {islanders.map(islander => (
+          <div key={islander.id} className="rounded-2xl overflow-hidden"
+            style={{ background:C.card, border:`1px solid ${C.cardBorder}`, boxShadow:C.cardShadow }}>
+            <div className="aspect-square w-full overflow-hidden">
+              <img src={islander.image} alt={islander.name}
+                className="w-full h-full object-cover object-top" />
+            </div>
+            <div className="py-2 px-1.5 text-center">
+              <p className="text-xs font-bold truncate" style={{ color:C.ink,
+                fontFamily:"'Josefin Sans',sans-serif", letterSpacing:"0.03em" }}>
+                {islander.name}
+              </p>
+            </div>
+          </div>
         ))}
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {filtered.map(islander => {
-          const members = matchmakerFav ? (COUPLE_MEMBER_MAP[matchmakerFav] ?? []) : [];
-          const isMatch = members.includes(islander.id);
-          return (
-            <div key={islander.id} className="rounded-2xl overflow-hidden"
-              style={{ background:C.card, border:`1px solid ${C.cardBorder}`, boxShadow:C.cardShadow, opacity:islander.status==="dumped"?0.6:1 }}>
-              <div className="h-1.5" style={{
-                background: islander.status==="coupled" ? `linear-gradient(to right,${C.ocean},${C.pink})`
-                          : islander.status==="single"  ? `linear-gradient(to right,${C.coral},${C.amber})`
-                          : "#E2E8F0",
-              }} />
-              <div className="p-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-14 h-14 rounded-full overflow-hidden flex items-center justify-center text-2xl flex-shrink-0"
-                    style={{ background:islander.status==="coupled"?"#EFF9FF":"#FFF5F5" }}>
-                    {islander.image
-                      ? <img src={islander.image} alt={islander.name} className="w-full h-full object-cover" />
-                      : islander.emoji}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="font-bold" style={{ color:C.ink }}>{islander.name}</span>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold capitalize"
-                        style={{
-                          background: islander.status==="coupled" ? `${C.ocean}15` : islander.status==="single" ? `${C.coral}15` : "#F1F5F9",
-                          color:      islander.status==="coupled" ? C.ocean        : islander.status==="single" ? C.coral        : C.muted,
-                        }}>
-                        {islander.status}
-                      </span>
-                      {isMatch && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full font-bold"
-                          style={{ background:`${C.pink}20`, color:C.pink }}>
-                          🏝️ Your Pick
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs mt-0.5" style={{ color:C.muted }}>{islander.age} · {islander.job}</p>
-                  </div>
-                </div>
-                <p className="text-sm mt-3 leading-relaxed" style={{ color:C.slate }}>{islander.bio}</p>
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {islander.traits.map(t => (
-                    <span key={t} className="text-[11px] px-2.5 py-0.5 rounded-full font-semibold"
-                      style={{ background:`${C.pink}15`, color:C.pink }}>{t}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {filtered.length === 0 && (
-        <div className="text-center py-10">
-          <Search size={32} className="mx-auto mb-3 opacity-40" color="white" />
-          <p className="text-sm" style={{ color:"rgba(255,255,255,0.6)" }}>No islanders match your search</p>
-        </div>
-      )}
     </motion.div>
   );
 }
@@ -1186,70 +1062,80 @@ function CouplesTab({ islanders, setIslanders }) {
 // ─── ChatTab ──────────────────────────────────────────────────────────────────
 function ChatTab({ displayName, photoURL, uid }) {
   const [thread,    setThread]    = useState("canada");
-  const [messages,  setMessages]  = useState(INIT_MESSAGES);
+  const [msgs,      setMsgs]      = useState({});
   const [input,     setInput]     = useState("");
+  const [sending,   setSending]   = useState(false);
   const [textAlert, setTextAlert] = useState(null);
-  const bottomRef = useRef(null);
-  const msgId     = useRef(200);
-  const uColor    = uidColor(uid ?? "you");
+  const bottomRef  = useRef(null);
+  const unsubRef   = useRef(null);
+  const uColor     = uidColor(uid ?? "you");
 
+  // Subscribe to the active thread — swap listener when thread changes
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior:"smooth" });
-  }, [messages, thread]);
+    if (unsubRef.current) unsubRef.current();
+    const q = query(
+      collection(db, "threads", thread, "messages"),
+      orderBy("createdAt", "asc"),
+    );
+    unsubRef.current = onSnapshot(q, snap => {
+      setMsgs(prev => ({
+        ...prev,
+        [thread]: snap.docs.map(d => ({ id: d.id, ...d.data() })),
+      }));
+    }, console.error);
+    return () => unsubRef.current?.();
+  }, [thread]);
 
-  // Random text alert
+  // Scroll to bottom whenever messages in the active thread update
+  const threadMsgs = msgs[thread] ?? [];
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [threadMsgs.length, thread]);
+
+  // Random text-alert banner
   useEffect(() => {
     const t = setTimeout(() => {
-      setTextAlert(TEXT_ALERTS[Math.floor(Math.random()*TEXT_ALERTS.length)]);
-    }, 20000 + Math.random()*25000);
+      setTextAlert(TEXT_ALERTS[Math.floor(Math.random() * TEXT_ALERTS.length)]);
+    }, 20000 + Math.random() * 25000);
     return () => clearTimeout(t);
   }, [textAlert]);
 
-  // Bot reply after user sends
-  useEffect(() => {
-    const msgs = messages[thread] ?? [];
-    const last = msgs[msgs.length-1];
-    if (!last?.self) return;
-    const bot = BOTS[Math.floor(Math.random()*BOTS.length)];
-    const t = setTimeout(() => {
-      setMessages(prev => ({
-        ...prev,
-        [thread]: [
-          ...(prev[thread]??[]),
-          { id:++msgId.current, user:bot.name, color:bot.color, text:BOT_REPLIES[Math.floor(Math.random()*BOT_REPLIES.length)], time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}) },
-        ],
-      }));
-    }, 1800 + Math.random()*2200);
-    return () => clearTimeout(t);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages[thread]?.length]);
-
-  function send(e) {
+  async function send(e) {
     e.preventDefault();
-    if (!input.trim()) return;
-    setMessages(prev => ({
-      ...prev,
-      [thread]: [
-        ...(prev[thread]??[]),
-        { id:++msgId.current, user:displayName??"You", color:uColor, text:input.trim(), time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}), self:true },
-      ],
-    }));
+    const text = input.trim();
+    if (!text || sending) return;
+    setSending(true);
     setInput("");
+    try {
+      await addDoc(collection(db, "threads", thread, "messages"), {
+        uid:         uid ?? null,
+        displayName: displayName ?? "Fan",
+        photoURL:    photoURL ?? null,
+        color:       uColor,
+        text,
+        createdAt:   serverTimestamp(),
+      });
+    } catch (err) {
+      console.error("Send failed:", err);
+      setInput(text);
+    } finally {
+      setSending(false);
+    }
   }
 
-  const activeThread = THREADS.find(t=>t.id===thread);
-  const msgs = messages[thread] ?? [];
+  const activeThread = THREADS.find(t => t.id === thread);
 
   return (
     <motion.div {...PAGE} className="space-y-3">
       <AnimatePresence>
         {textAlert && (
-          <motion.div initial={{ y:-50,opacity:0 }} animate={{ y:0,opacity:1 }} exit={{ y:-50,opacity:0 }}
+          <motion.div
+            initial={{ y:-50, opacity:0 }} animate={{ y:0, opacity:1 }} exit={{ y:-50, opacity:0 }}
             className="flex items-start gap-3 px-4 py-3 rounded-2xl"
             style={{ background:`linear-gradient(135deg,${C.ocean}20,${C.pink}20)`, border:`1px solid ${C.pink}40` }}>
             <span className="text-xl">📱</span>
             <p className="flex-1 text-sm font-semibold" style={{ color:C.ink }}>{textAlert}</p>
-            <button onClick={()=>setTextAlert(null)}><X size={14} color={C.muted} /></button>
+            <button onClick={() => setTextAlert(null)}><X size={14} color={C.muted} /></button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1258,69 +1144,94 @@ function ChatTab({ displayName, photoURL, uid }) {
       <div className="flex gap-2 overflow-x-auto pb-1">
         {THREADS.map(t => (
           <button key={t.id} onClick={() => setThread(t.id)}
-            className="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl transition-all"
+            className="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold transition-all"
             style={{
-              background: thread===t.id ? C.ocean : C.card,
-              color:      thread===t.id ? "white" : C.ink,
-              border:     `1px solid ${thread===t.id ? C.ocean : C.cardBorder}`,
+              background: thread === t.id ? C.ocean : C.card,
+              color:      thread === t.id ? "white" : C.ink,
+              border:     `1px solid ${thread === t.id ? C.ocean : C.cardBorder}`,
               boxShadow:  C.cardShadow,
             }}>
-            <span className="text-sm font-bold">{t.name}</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold"
-              style={{ background:thread===t.id?"rgba(255,255,255,0.25)":`${C.coral}18`, color:thread===t.id?"white":C.coral }}>
-              {t.online}
-            </span>
+            {t.name}
           </button>
         ))}
       </div>
 
       {/* Chat window */}
       <div className="rounded-2xl overflow-hidden flex flex-col"
-        style={{ background:C.card, border:`1px solid ${C.cardBorder}`, boxShadow:C.cardShadow, height:380 }}>
-        <div className="px-4 py-3 border-b flex items-center gap-2 flex-shrink-0" style={{ borderColor:"rgba(0,0,0,0.06)" }}>
+        style={{ background:C.card, border:`1px solid ${C.cardBorder}`, boxShadow:C.cardShadow, height:440 }}>
+
+        {/* Header */}
+        <div className="px-4 py-3 border-b flex items-center gap-2 flex-shrink-0"
+          style={{ borderColor:"rgba(0,0,0,0.06)" }}>
+          <MessageCircle size={13} color={C.ocean} />
           <span className="text-sm font-bold" style={{ color:C.ink }}>{activeThread?.name}</span>
-          <div className="ml-auto flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full" style={{ background:C.green }} />
-            <span className="text-xs" style={{ color:C.muted }}>{activeThread?.online} online</span>
-          </div>
+          <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full"
+            style={{ background:`${C.ocean}18`, color:C.ocean }}>LIVE</span>
         </div>
 
+        {/* Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
-          {msgs.map(msg => (
-            <div key={msg.id} className={`flex items-end gap-2 ${msg.self?"flex-row-reverse":""}`}>
-              {!msg.self && (
-                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mb-0.5"
-                  style={{ background:msg.color }}>
-                  {msg.user[0].toUpperCase()}
-                </div>
-              )}
-              <div className={`max-w-[75%] flex flex-col gap-0.5 ${msg.self?"items-end":"items-start"}`}>
-                {!msg.self && <span className="text-[10px] font-semibold px-1" style={{ color:C.muted }}>{msg.user}</span>}
-                <div className="px-3 py-2 rounded-2xl text-sm leading-relaxed"
-                  style={{
-                    background: msg.self ? `linear-gradient(135deg,${C.ocean},${C.pink})` : "#F8FAFC",
-                    color:      msg.self ? "white" : C.ink,
-                    borderBottomRightRadius: msg.self ? 4 : 16,
-                    borderBottomLeftRadius:  msg.self ? 16 : 4,
-                  }}>
-                  {msg.text}
-                </div>
-                <span className="text-[10px] px-1" style={{ color:C.muted }}>{msg.time}</span>
-              </div>
+          {threadMsgs.length === 0 ? (
+            <div className="h-full flex items-center justify-center">
+              <p className="text-sm text-center" style={{ color:C.muted }}>
+                No messages yet — start the conversation! 🏝️
+              </p>
             </div>
-          ))}
+          ) : (
+            threadMsgs.map(msg => {
+              const isSelf = msg.uid === uid;
+              const timeStr = msg.createdAt?.toDate
+                ? msg.createdAt.toDate().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" })
+                : "";
+              return (
+                <div key={msg.id} className={`flex items-end gap-2 ${isSelf ? "flex-row-reverse" : ""}`}>
+                  {!isSelf && (
+                    <div className="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mb-0.5"
+                      style={{ background: msg.color ?? uidColor(msg.uid ?? "") }}>
+                      {msg.photoURL
+                        ? <img src={msg.photoURL} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        : (msg.displayName?.[0]?.toUpperCase() ?? "?")}
+                    </div>
+                  )}
+                  <div className={`max-w-[75%] flex flex-col gap-0.5 ${isSelf ? "items-end" : "items-start"}`}>
+                    {!isSelf && (
+                      <span className="text-[10px] font-semibold px-1" style={{ color:C.muted }}>
+                        {msg.displayName}
+                      </span>
+                    )}
+                    <div className="px-3 py-2 rounded-2xl text-sm leading-relaxed"
+                      style={{
+                        background:              isSelf ? `linear-gradient(135deg,${C.ocean},${C.pink})` : "#F8FAFC",
+                        color:                   isSelf ? "white" : C.ink,
+                        borderBottomRightRadius: isSelf ? 4 : 16,
+                        borderBottomLeftRadius:  isSelf ? 16 : 4,
+                      }}>
+                      {msg.text}
+                    </div>
+                    {timeStr && (
+                      <span className="text-[10px] px-1" style={{ color:C.muted }}>{timeStr}</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
           <div ref={bottomRef} />
         </div>
 
-        <form onSubmit={send} className="border-t flex items-center gap-2 px-3 py-2.5 flex-shrink-0"
+        {/* Input */}
+        <form onSubmit={send}
+          className="border-t flex items-center gap-2 px-3 py-2.5 flex-shrink-0"
           style={{ borderColor:"rgba(0,0,0,0.06)" }}>
-          <input type="text" value={input} onChange={e=>setInput(e.target.value)}
-            placeholder="Type a message…"
+          <input
+            type="text" value={input} onChange={e => setInput(e.target.value)}
+            placeholder="Say something…" maxLength={300}
             className="flex-1 py-2 px-3 rounded-xl text-sm outline-none"
-            style={{ background:"#F8FAFC", border:`1px solid ${C.cardBorder}`, color:C.ink }} />
-          <button type="submit"
-            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all active:scale-90"
-            style={{ background:`linear-gradient(135deg,${C.ocean},${C.pink})` }}>
+            style={{ background:"#F8FAFC", border:`1px solid ${C.cardBorder}`, color:C.ink }}
+          />
+          <button type="submit" disabled={!input.trim() || sending}
+            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all active:scale-90 disabled:opacity-40"
+            style={{ background:`linear-gradient(135deg,${C.ocean},${C.pink})`, border:"none" }}>
             <Send size={14} color="white" />
           </button>
         </form>
@@ -1627,19 +1538,10 @@ export default function Dashboard({ onSignOut, partyCode, displayName, uid, phot
               partyCode={partyCode} displayName={displayName} uid={uid} photoURL={photoURL} />
           )}
           {activeTab === "islanders" && (
-            <IslandersTab key="islanders" islanders={islanders} matchmakerFav={matchmakerFav} />
-          )}
-          {activeTab === "couples" && (
-            <CouplesTab key="couples" islanders={islanders} setIslanders={setIslanders} />
+            <IslandersTab key="islanders" islanders={islanders} />
           )}
           {activeTab === "chat" && (
             <ChatTab key="chat" displayName={displayName} photoURL={photoURL} uid={uid} />
-          )}
-          {activeTab === "challenges" && (
-            <ChallengesTab key="challenges" />
-          )}
-          {activeTab === "vote" && (
-            <VoteTab key="vote" islanders={islanders} />
           )}
         </AnimatePresence>
       </main>
